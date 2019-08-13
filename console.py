@@ -11,6 +11,7 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 from shlex import split
+import re
 
 
 class HBNBCommand(cmd.Cmd):
@@ -38,17 +39,40 @@ class HBNBCommand(cmd.Cmd):
             SyntaxError: when there is no args given
             NameError: when there is no object taht has the name
         """
-        try:
-            if not line:
-                raise SyntaxError()
+        if line == "" or line is None:
+            print("** class name missing **")
+        else:
             my_list = line.split(" ")
-            obj = eval("{}()".format(my_list[0]))
+            clsname = my_list[0]
+            if clsname not in storage.classes():
+                print("** class doesn't exist **")
+                return
+            obj = eval("{}()".format(clsname))
+            params = my_list[1:]
+            for param in params:
+                rex = r'^(\S+)\=(\S+)'
+                match = re.search(rex, param)
+                if not match:
+                    continue
+                key = match.group(1)
+                value = match.group(2)
+                cast = None
+                if not re.search('^".*"$', value):
+                    if '.' in value:
+                        cast = float
+                    else:
+                        cast = int
+                else:
+                    value = value.replace('"', '')
+                    value = value.replace('_', ' ')
+                if cast:
+                    try:
+                        value = cast(value)
+                    except ValueError:
+                        pass
+                setattr(obj, key, value)
             obj.save()
             print("{}".format(obj.id))
-        except SyntaxError:
-            print("** class name missing **")
-        except NameError:
-            print("** class doesn't exist **")
 
     def do_show(self, line):
         """Prints the string representation of an instance

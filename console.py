@@ -47,7 +47,7 @@ class HBNBCommand(cmd.Cmd):
             params = my_list[1:]
             for param in params:
                 k, v = param.split("=")
-                if not k or not v:
+                if k == '' or v == '':
                     continue
                 if v[0] == '"':
                     v = v.replace('_', ' ')

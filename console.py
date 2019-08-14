@@ -39,40 +39,32 @@ class HBNBCommand(cmd.Cmd):
             SyntaxError: when there is no args given
             NameError: when there is no object taht has the name
         """
-        if line == "" or line is None:
-            print("** class name missing **")
-        else:
+        try:
+            if not line:
+                raise SyntaxError()
             my_list = line.split(" ")
-            clsname = my_list[0]
-            if clsname not in storage.classes():
-                print("** class doesn't exist **")
-                return
-            obj = eval("{}()".format(clsname))
+            obj = eval("{}()".format(my_list[0]))
             params = my_list[1:]
             for param in params:
-                rex = r'^(\S+)\=(\S+)'
-                match = re.search(rex, param)
-                if not match:
+                k, v = param.split("=")
+                if not k or not v:
                     continue
-                key = match.group(1)
-                value = match.group(2)
-                cast = None
-                if not re.search('^".*"$', value):
-                    if '.' in value:
-                        cast = float
-                    else:
-                        cast = int
+                if v[0] == '"':
+                    v = v.replace('_', ' ')
+                    v = v.replace('"', '')
+                elif '.' in v and re.match(r"^\d+\.\d+$", v) is not None:
+                    v = float(v)
+                elif v.isdigit():
+                    v = int(v)
                 else:
-                    value = value.replace('"', '')
-                    value = value.replace('_', ' ')
-                if cast:
-                    try:
-                        value = cast(value)
-                    except ValueError:
-                        pass
-                setattr(obj, key, value)
+                    continue
+                setattr(obj, k, v)
             obj.save()
             print("{}".format(obj.id))
+        except SyntaxError:
+            print("** class name missing **")
+        except NameError:
+            print("** class doesn't exist **")
 
     def do_show(self, line):
         """Prints the string representation of an instance

@@ -58,7 +58,8 @@ class HBNBCommand(cmd.Cmd):
                     v = int(v)
                 else:
                     continue
-                setattr(obj, k, v)
+                if hasattr(obj, k):
+                    setattr(obj, k, v)
             obj.save()
             print("{}".format(obj.id))
         except SyntaxError:

@@ -49,16 +49,9 @@ class HBNBCommand(cmd.Cmd):
                 k, v = param.split("=")
                 if k == '' or v == '':
                     continue
-                if v[0] == '"':
-                    v = v.replace('_', ' ')
-                    v = v.replace('"', '')
-                elif '.' in v and re.match(r"^\d+\.\d+$", v) is not None:
-                    v = float(v)
-                elif v.isdigit():
-                    v = int(v)
-                else:
-                    continue
-                setattr(obj, k, v)
+                v = v.replace('_', ' ')
+                if hasattr(obj, k):
+                    setattr(obj, k, eval(v))
             obj.save()
             print("{}".format(obj.id))
         except SyntaxError:

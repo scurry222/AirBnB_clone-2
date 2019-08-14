@@ -65,7 +65,6 @@ class FileStorage:
         if obj in self.__objects.values():
             key = "{}.{}".format(type(obj).__name__, obj.id)
             del(self.__objects[key])
-        return
 
     def classes(self):
         """Returns a dictionary of valid classes and their references."""

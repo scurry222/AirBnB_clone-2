@@ -17,6 +17,7 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 from models.engine.file_storage import FileStorage
+from os import getenv
 
 
 class TestConsole(unittest.TestCase):
@@ -26,6 +27,18 @@ class TestConsole(unittest.TestCase):
     def setUpClass(cls):
         """setup for the test"""
         cls.consol = HBNBCommand()
+
+    def SetUpFile(self):
+        """set up for json file"""
+        if os.path.isfile("file.json"):
+            os.remove("file.json")
+        self.resetStorage()
+
+    def resetStorage(self):
+        """Resets FileStorage data"""
+        FileStorage._FileStorage__objects = {}
+        if os.path.isfile(FileStorage._FileStorage__file_path):
+            os.remove(FileStorage._FileStorage__file_path)
 
     @classmethod
     def teardown(cls):
@@ -88,6 +101,40 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("all User")
             self.assertEqual(
                 "[[User]", f.getvalue()[:7])
+
+    @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") == "db",
+                     "can't run if storage is db")
+
+    def test_create_2(self):
+        """Test create command with parameters."""
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd('create State name="California"')
+            id = f.getvalue()[:-1]
+            self.assertEqual(len(id), 36)
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd("show State {}".format(id))
+            self.assertTrue("'name': 'California'" in f.getvalue())
+            self.assertEqual(
+                "[State]", f.getvalue()[:7])
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd('create City name="San_Francisco state_id="{}"'
+                               .format(id))
+            id = f.getvalue()[:-1]
+            self.assertEqual(len(id), 36)
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd('create Place longitude=1.11')
+            id = f.getvalue()[:-1]
+            self.assertEqual(len(id), 36)
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd("show Place {}".format(id))
+            self.assertTrue("'longitude': 1.11" in f.getvalue())
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd('create City name=San_Francisco')
+            id = f.getvalue()[:-1]
+            self.assertEqual(len(id), 36)
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd("show City {}".format(id))
+            self.assertTrue("'name': 'San_Francisco'" in f.getvalue())
 
     def test_show(self):
         """Test show command inpout"""
@@ -169,6 +216,7 @@ class TestConsole(unittest.TestCase):
 
     def test_z_all(self):
         """Test alternate all command inpout"""
+        self.resetStorage()
         with patch('sys.stdout', new=StringIO()) as f:
             self.consol.onecmd("asdfsdfsd.all()")
             self.assertEqual(
@@ -179,6 +227,7 @@ class TestConsole(unittest.TestCase):
 
     def test_z_count(self):
         """Test count command inpout"""
+        self.resetStorage()
         with patch('sys.stdout', new=StringIO()) as f:
             self.consol.onecmd("asdfsdfsd.count()")
             self.assertEqual(

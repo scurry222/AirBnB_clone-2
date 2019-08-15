@@ -7,6 +7,7 @@ import pep8
 from os import getenv
 from models import storage
 import datetime
+import MySQLdb
 
 
 class TestBaseModel(unittest.TestCase):
@@ -61,6 +62,8 @@ class TestBaseModel(unittest.TestCase):
         """test if the base is an type BaseModel"""
         self.assertTrue(isinstance(self.base, BaseModel))
 
+    @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") == 'file', "can't run if\
+                     storage is set to file")
     def test_save_BaesModel(self):
         """test if the save works"""
         self.base.save()

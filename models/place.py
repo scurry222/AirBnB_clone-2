@@ -8,14 +8,13 @@ from sqlalchemy import Column, Table, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
 import os
 
-if os.getenv('HBNB_TYPE_STORAGE') == 'db':
-    place_amenity = Table('place_amenity', Base.metadata,
-                          Column('place_id', String(60),
-                                 ForeignKey('places.id'),
-                                 primary_key=True, nullable=False),
-                          Column('amenity_id', String(60),
-                                 ForeignKey('amenities.id'),
-                                 primary_key=True, nullable=False))
+place_amenity = Table('place_amenity', Base.metadata,
+                      Column('place_id', String(60),
+                             ForeignKey('places.id'),
+                             primary_key=True, nullable=False),
+                      Column('amenity_id', String(60),
+                             ForeignKey('amenities.id'),
+                             primary_key=True, nullable=False))
 
 
 class Place(BaseModel, Base):
@@ -56,11 +55,13 @@ class Place(BaseModel, Base):
             """ Getter method for review attribute """
             return [review for review in models.storage.all(Review)
                     if review.place_id == self.id]
+
         @property
         def amenities(self):
             """ Getter method for amenities attribute """
             return [amenity for amenity in models.storage.all(Amenity) if
                     amenity.id in self.amenity_ids]
+
         @amenities.setter
         def amenities(self, amenity_obj):
             """ Setter method for amenities attribute """

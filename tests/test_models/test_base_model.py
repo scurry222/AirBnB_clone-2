@@ -4,6 +4,9 @@ import unittest
 import os
 from models.base_model import BaseModel
 import pep8
+from os import getenv
+from models import storage
+import datetime
 
 
 class TestBaseModel(unittest.TestCase):
@@ -15,6 +18,12 @@ class TestBaseModel(unittest.TestCase):
         cls.base = BaseModel()
         cls.base.name = "Kev"
         cls.base.num = 20
+        if getenv("HBNB_TYPE_STORAGE") == "db":
+            cls.db = MySQLdb.connect(getenv("HBNB_MYSQL_HOST"),
+                                     getenv("HBNB_MYSQL_USER"),
+                                     getenv("HBNB_MYSQL_PWD"),
+                                     getenv("HBNB_MYSQL_DB"))
+            cls.cursor = cls.db.cursor()
 
     @classmethod
     def teardown(cls):
@@ -64,6 +73,21 @@ class TestBaseModel(unittest.TestCase):
         self.assertIsInstance(base_dict['created_at'], str)
         self.assertIsInstance(base_dict['updated_at'], str)
 
+    def test_to_dict_BaseModel_2(self):
+        """Test the to_dict() method v2"""
+        base_dict = self.base.to_dict()
+        self.assertFalse('_sa_instance_state' in base_dict.keys())
+
+    @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") == 'file', "can't run if\
+                     storage is set to file")
+
+    def test_attributes_BaseModel_2(self):
+        """Test the attributes from the v2"""
+        attributes = storage.attributes()["BaseModel"]
+        b = BaseModel()
+        for k, v in attributes.items():
+            self.assertTrue(hasattr(b, k))
+            self.assertEqual(type(getattr(b, k, None)), v)
 
 if __name__ == "__main__":
     unittest.main()

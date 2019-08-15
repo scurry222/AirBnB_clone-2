@@ -6,6 +6,9 @@ from sqlalchemy import create_engine
 from models.base_model import BaseModel, Base
 from models.state import State
 from models.city import City
+from models.user import User
+from models.place import Place
+from models.review import Review
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 
@@ -27,12 +30,13 @@ class DBStorage:
 
     def all(self, cls=None):
         """ Method returns all objects of a certain type, or all objects """
-        classes = [City, State]  # More will be added!!!
+        classes = [City, State, User, Place, Review]  # More will be added!!!
+        objs = []
         if cls:
-            objs = [obj for obj in self.__session.query(curr_class).all()
-                    for curr_class in classes]
-        else:
             objs = self.__session.query(cls).all()
+        else:
+            for curr in classes:
+                objs.extend([obj for obj in self.__session.query(curr).all()])
         objs_dict = {"{}.{}".format(type(obj).__name__, obj.id):
                      obj for obj in objs}
         return objs_dict

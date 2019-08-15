@@ -80,7 +80,6 @@ class TestBaseModel(unittest.TestCase):
 
     @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") == 'file', "can't run if\
                      storage is set to file")
-
     def test_attributes_BaseModel_2(self):
         """Test the attributes from the v2"""
         attributes = storage.attributes()["BaseModel"]

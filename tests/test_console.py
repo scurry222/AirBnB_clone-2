@@ -104,7 +104,6 @@ class TestConsole(unittest.TestCase):
 
     @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") == "db",
                      "can't run if storage is db")
-
     def test_create_2(self):
         """Test create command with parameters."""
         with patch('sys.stdout', new=StringIO()) as f:

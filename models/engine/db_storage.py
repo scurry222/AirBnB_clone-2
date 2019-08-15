@@ -18,7 +18,7 @@ import datetime
 class DBStorage:
     """ Custom class for DBStorage """
     __engine = None
-    __engine = None
+    __session = None
 
     def __init__(self):
         """ Initialization method """

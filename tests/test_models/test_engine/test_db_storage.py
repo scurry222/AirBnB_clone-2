@@ -54,6 +54,7 @@ class TestDBStorage(unittest.TestCase):
         self.assertTrue(hasattr(DBStorage, 'reload'))
         self.assertTrue(hasattr(DBStorage, 'delete'))
         self.assertTrue(hasattr(DBStorage, '_DBStorage__engine'))
+        self.assertTrue(hasattr(DBStorage, '_DBStorage__session'))
 
     @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") != 'db',
                      "can't run if storage is file")

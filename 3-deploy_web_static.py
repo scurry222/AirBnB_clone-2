@@ -11,6 +11,7 @@ import re
 env.hosts = ['104.196.55.234', '35.229.108.9']
 env.user = "ubuntu"
 
+
 @runs_once
 def do_pack():
     """ archives web static

@@ -14,7 +14,7 @@ env.hosts = ['104.196.55.234', '35.229.108.9']
 def do_pack():
     """ archives web static
     """
-    time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    time = datetime.now().strftime("%Y%m%d%H%M%S")
     local("mkdir -p versions")
     command = local("tar -czvf versions/web_static_{}.tgz web_static"
                     .format(time))

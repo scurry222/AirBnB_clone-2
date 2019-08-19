@@ -9,6 +9,7 @@ import re
 
 
 env.hosts = ['104.196.55.234', '35.229.108.9']
+env.user = "ubuntu"
 
 
 @runs_once
@@ -68,7 +69,7 @@ def do_deploy(archive_path):
     if result.failed:
         return False
 
-    sudo("sudo service nginx restart")
+    print('New version deployed!')
 
     return True
 

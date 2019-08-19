@@ -8,6 +8,7 @@ import os
 import re
 
 env.hosts = ['104.196.55.234', '35.229.108.9']
+env.user = "ubuntu"
 
 
 def do_pack():
@@ -50,8 +51,8 @@ def do_deploy(archive_path):
     if result.failed:
         return False
     result = run("mv /data/web_static/releases/{}"
-              "/web_static/* /data/web_static/releases/{}/"
-              .format(filename, filename))
+                 "/web_static/* /data/web_static/releases/{}/"
+                 .format(filename, filename))
     if result.failed:
         return False
     result = run("rm -rf /data/web_static/releases/{}/web_static"

@@ -49,9 +49,9 @@ def do_deploy(archive_path):
     result = run("rm /tmp/{}.tgz".format(filename))
     if result.failed:
         return False
-    result = run("mv /data/web_static/releases/{}/web_static/*"
-                 "data/web_static/releases/{}/"
-                 .format(filename, filename))
+    result = run("mv /data/web_static/releases/{}"
+              "/web_static/* /data/web_static/releases/{}/"
+              .format(filename, filename))
     if result.failed:
         return False
     result = run("rm -rf /data/web_static/releases/{}/web_static"
@@ -67,6 +67,5 @@ def do_deploy(archive_path):
         return False
 
     print('New version deployed!')
-    sudo("sudo service nginx restart")
 
     return True

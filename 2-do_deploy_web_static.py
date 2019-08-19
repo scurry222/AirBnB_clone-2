@@ -3,7 +3,7 @@
 """
 from fabric.operations import local, run, put
 from datetime import datetime
-from fabric.api import *
+from fabric.api import env
 import os
 import re
 
@@ -66,6 +66,7 @@ def do_deploy(archive_path):
     if result.failed:
         return False
 
+    print('New version deployed!')
     sudo("sudo service nginx restart")
 
     return True

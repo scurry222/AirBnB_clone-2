@@ -18,12 +18,13 @@ def do_pack():
     """
     time = datetime.now().strftime("%Y%m%d%H%M%S")
     local("mkdir -p versions")
-    command = local("tar -czvf versions/web_static_{}.tgz web_static"
-                    .format(time))
-    if command.failed:
+    f = "versions/web_static_{}.tgz".format(time)
+    c = local("tar -czvf versions/web_static_{}.tgz web_static"
+              .format(time))
+    if c.failed:
         return None
     else:
-        return command
+        return f
 
 
 def do_deploy(archive_path):
@@ -78,6 +79,6 @@ def deploy():
     """packs and deploys web static
     """
     tar = do_pack()
-    if not tar:
+    if tar is None:
         return False
     return do_deploy(tar)

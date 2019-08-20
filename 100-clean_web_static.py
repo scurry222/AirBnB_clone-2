@@ -90,15 +90,10 @@ def do_clean(number=0):
     n = int(number)
     if n in (0, 1):
         n = 1
-    print(len(l[n:]))
     for rm in l[n:]:
         local('rm versions/' + rm)
 
     l = run('ls -1t /data/web_static/releases')
     l = l.split('\r\n')
-    print(l)
-    print(len(l[n:]))
     for rm in l[n:]:
-        if rm is 'test':
-            continue
         run('rm -rf /data/web_static/releases/' + rm)

@@ -40,6 +40,10 @@ class FileStorage:
             key = "{}.{}".format(type(obj).__name__, obj.id)
             self.__objects[key] = obj
 
+    def close(self):
+        """ deserializes JSON file to objects """
+        return self.reload()
+
     def save(self):
         """serialize the file path to JSON file path
         """

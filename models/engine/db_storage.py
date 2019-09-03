@@ -37,7 +37,7 @@ class DBStorage:
         classes = [City, State, User, Place, Review, Amenity]
         objs = []
         if cls:
-            objs = self.__session.query(cls).all()
+            objs = self.__session.query(eval(cls))
         else:
             for curr in classes:
                 objs.extend([obj for obj in self.__session.query(curr).all()])
@@ -67,6 +67,10 @@ class DBStorage:
             obj: object to delete
         """
         self.__session.delete(obj)
+
+    def close(self):
+        """ Call remove method on private session attribute """
+        self.__session.close()
 
     def reload(self):
         """ Method creates a database session and all tables """

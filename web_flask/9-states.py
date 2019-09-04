@@ -12,14 +12,16 @@ app = Flask(__name__)
 @app.route('/states/<id>', strict_slashes=False)
 def states(id=None):
     """ Fetch cities in passed in state id if provided, all if not """
-    if not id:
-        states = storage.all('State').values()
-    else:
+    states = storage.all('State')
+    if id:
         k = '{}.{}'.format('State', id)
         if k in states:
             states = states[k]
         else:
             states = None
+    else:
+        states = storage.all('State').values()
+
 
     return render_template('9-states.html', states=states, id=id)
 
